@@ -18,8 +18,8 @@ def llm_qianfan(PROMPT='你好，你是谁？'):
     os.environ["QIANFAN_SECRET_KEY"] = QIANFAN_SECRET_KEY
     
     # 选择大语言模型
-    MODEL = "ERNIE-Bot-4"
-    # MODEL = "ERNIE Speed"
+    # MODEL = "ERNIE-Bot-4"
+    MODEL = "ERNIE-Speed-8K"
     # MODEL = "ERNIE-Lite-8K"
     # MODEL = 'ERNIE-Tiny-8K'
 
