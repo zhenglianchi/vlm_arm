@@ -79,6 +79,10 @@ def single_joint_move(joint_index, angle):
     rtde_c.moveJ(actual_q,0.5,0.3)
     time.sleep(2)
 
+def move_to_top_view():
+    print('移动至俯视姿态')
+    rtde_c.moveJ([-62.13, 8.96, -87.71, -14.41, 2.54, -16.34],0.5,0.3)
+    time.sleep(3)
 
 def top_view_shot(check=False):
     '''
@@ -121,3 +125,91 @@ def top_view_shot(check=False):
     cap.release()
     # 关闭图像窗口
     # cv2.destroyAllWindows()
+
+
+def eye2hand(X_im=160, Y_im=120):
+    '''
+    输入目标点在图像中的像素坐标，转换为机械臂坐标
+    '''
+
+    # 整理两个标定点的坐标
+    cali_1_im = [130, 290]                       # 左下角，第一个标定点的像素坐标，要手动填！
+    cali_1_mc = [-21.8, -197.4]                  # 左下角，第一个标定点的机械臂坐标，要手动填！
+    cali_2_im = [640, 0]                         # 右上角，第二个标定点的像素坐标
+    cali_2_mc = [215, -59.1]                    # 右上角，第二个标定点的机械臂坐标，要手动填！
+    
+    X_cali_im = [cali_1_im[0], cali_2_im[0]]     # 像素坐标
+    X_cali_mc = [cali_1_mc[0], cali_2_mc[0]]     # 机械臂坐标
+    Y_cali_im = [cali_2_im[1], cali_1_im[1]]     # 像素坐标，先小后大
+    Y_cali_mc = [cali_2_mc[1], cali_1_mc[1]]     # 机械臂坐标，先大后小
+
+    # X差值
+    X_mc = int(np.interp(X_im, X_cali_im, X_cali_mc))
+
+    # Y差值
+    Y_mc = int(np.interp(Y_im, Y_cali_im, Y_cali_mc))
+
+    return X_mc, Y_mc
+
+# 吸泵吸取并移动物体
+#def pump_move(mc, XY_START=[230,-50], HEIGHT_START=90, XY_END=[100,220], HEIGHT_END=100, HEIGHT_SAFE=220):
+
+    '''
+    用吸泵，将物体从起点吸取移动至终点
+
+    mc：机械臂实例
+    XY_START：起点机械臂坐标
+    HEIGHT_START：起点高度
+    XY_END：终点机械臂坐标
+    HEIGHT_END：终点高度
+    HEIGHT_SAFE：搬运途中安全高度
+    '''
+    
+    '''# 初始化GPIO
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(20, GPIO.OUT)
+    GPIO.setup(21, GPIO.OUT)
+
+    # 设置运动模式为插补
+    mc.set_fresh_mode(0)
+    
+    # # 机械臂归零
+    # print('    机械臂归零')
+    # mc.send_angles([0, 0, 0, 0, 0, 0], 40)
+    # time.sleep(4)
+    
+    # 吸泵移动至物体上方
+    print('    吸泵移动至物体上方')
+    mc.send_coords([XY_START[0], XY_START[1], HEIGHT_SAFE, 0, 180, 90], 20, 0)
+    time.sleep(4)
+
+    # 开启吸泵
+    pump_on()
+    
+    # 吸泵向下吸取物体
+    print('    吸泵向下吸取物体')
+    mc.send_coords([XY_START[0], XY_START[1], HEIGHT_START, 0, 180, 90], 15, 0)
+    time.sleep(4)
+
+    # 升起物体
+    print('    升起物体')
+    mc.send_coords([XY_START[0], XY_START[1], HEIGHT_SAFE, 0, 180, 90], 15, 0)
+    time.sleep(4)
+
+    # 搬运物体至目标上方
+    print('    搬运物体至目标上方')
+    mc.send_coords([XY_END[0], XY_END[1], HEIGHT_SAFE, 0, 180, 90], 15, 0)
+    time.sleep(4)
+
+    # 向下放下物体
+    print('    向下放下物体')
+    mc.send_coords([XY_END[0], XY_END[1], HEIGHT_END, 0, 180, 90], 20, 0)
+    time.sleep(3)
+
+    # 关闭吸泵
+    pump_off()
+
+    # 机械臂归零
+    print('    机械臂归零')
+    mc.send_angles([0, 0, 0, 0, 0, 0], 40)
+    time.sleep(3)'''

@@ -19,14 +19,8 @@ from utils_vlm_move_ur5 import *
 #from utils_drag_teaching import *   # 拖动示教
 from utils_agent import *           # 智能体Agent编排
 from utils_tts import *             # 语音合成模块
-#from utils_ur5 import *             # 适用于UR5的动作
+from utils_ur5 import *             # 适用于UR5的动作
 
-# 关闭吸泵，吸泵放气，释放物体
-#pump_off()
-print("pump off!")
-
-# 机械臂归零
-# back_zero()
 
 #播放WAV文件
 print('播放欢迎词')
@@ -37,16 +31,16 @@ def agent_play():
     '''
     主函数，语音控制机械臂智能体编排动作
     '''
-    # 归零
-    #back_zero()
-    print("robot back zero")
+    # 机械臂归零
+    print("机械臂归零")
+    back_zero()
     
     # print('测试摄像头')
     # check_camera()
     is_continue = 'yes'
     while(is_continue == "yes"):
         # 输入指令
-        start_record_ok = input('是否开启录音，输入数字录音指定时长，按k打字输入，按c输入默认指令\n')
+        start_record_ok = input('是否开启录音，输入数字录音指定时长，按k打字输入，按c输入默认指令\n默认指令：点个头，跳个舞，然后将绿色方块放在摩托车上\n')
         #如果是数字
         if str.isnumeric(start_record_ok):
             DURATION = int(start_record_ok)
@@ -59,7 +53,7 @@ def agent_play():
             order = input('请输入指令')
         #默认指令
         elif start_record_ok == 'c':
-            order = '将手机放在水杯上'
+            order = '点个头，跳个舞，然后将绿色方块放在摩托车上'
         else:
             print('无指令，退出')
             # exit()
@@ -81,7 +75,7 @@ def agent_play():
         for each in agent_plan_output['function']: # 运行智能体规划编排的每个函数
             print('开始执行动作', each)
             eval(each)
-            #print(each," OK!")
+            print(each," OK!")
 
         is_continue = input("是否继续下一轮的任务？(yes or no)")
 
